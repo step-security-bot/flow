@@ -89,8 +89,8 @@
           "full" : {
             "expect" : "HTTP/1.1 500 Server Error\r\nContent-Type: text/html;charset=utf-8\r\nDate: Sun, 06 Jun 2021 19:50:29 GMT\r\nServer: Jetty(9.4.48.v20220622)\r\nTransfer-Encoding: chunked\r\n\r\nThe service has been configured to be broken!",
             "expectBytes" : "SFRUUC8xLjEgNTAwIFNlcnZlciBFcnJvcg0KQ29udGVudC1UeXBlOiB0ZXh0L2h0bWw7Y2hhcnNldD11dGYtOA0KRGF0ZTogU3VuLCAwNiBKdW4gMjAyMSAxOTo1MDoyOSBHTVQNClNlcnZlcjogSmV0dHkoOS40LjQ4LnYyMDIyMDYyMikNClRyYW5zZmVyLUVuY29kaW5nOiBjaHVua2VkDQoNCjJkDQpUaGUgc2VydmljZSBoYXMgYmVlbiBjb25maWd1cmVkIHRvIGJlIGJyb2tlbiENCjANCg0K",
-            "actual" : "HTTP/1.1 500 Server Error\r\nContent-Type: text/html;charset=utf-8\r\nDate: Wed, 10 Aug 2022 15:17:31 GMT\r\nServer: Jetty(9.4.48.v20220622)\r\nTransfer-Encoding: chunked\r\n\r\nThe service has been configured to be broken!",
-            "actualBytes" : "SFRUUC8xLjEgNTAwIFNlcnZlciBFcnJvcg0KQ29udGVudC1UeXBlOiB0ZXh0L2h0bWw7Y2hhcnNldD11dGYtOA0KRGF0ZTogV2VkLCAxMCBBdWcgMjAyMiAxNToxNzozMSBHTVQNClNlcnZlcjogSmV0dHkoOS40LjQ4LnYyMDIyMDYyMikNClRyYW5zZmVyLUVuY29kaW5nOiBjaHVua2VkDQoNCjJkDQpUaGUgc2VydmljZSBoYXMgYmVlbiBjb25maWd1cmVkIHRvIGJlIGJyb2tlbiENCjANCg0K"
+            "actual" : "HTTP/1.1 500 Server Error\r\nContent-Type: text/html;charset=utf-8\r\nDate: Wed, 10 Aug 2022 16:38:05 GMT\r\nServer: Jetty(9.4.48.v20220622)\r\nTransfer-Encoding: chunked\r\n\r\nThe service has been configured to be broken!",
+            "actualBytes" : "SFRUUC8xLjEgNTAwIFNlcnZlciBFcnJvcg0KQ29udGVudC1UeXBlOiB0ZXh0L2h0bWw7Y2hhcnNldD11dGYtOA0KRGF0ZTogV2VkLCAxMCBBdWcgMjAyMiAxNjozODowNSBHTVQNClNlcnZlcjogSmV0dHkoOS40LjQ4LnYyMDIyMDYyMikNClRyYW5zZmVyLUVuY29kaW5nOiBjaHVua2VkDQoNCjJkDQpUaGUgc2VydmljZSBoYXMgYmVlbiBjb25maWd1cmVkIHRvIGJlIGJyb2tlbiENCjANCg0K"
           },
           "asserted" : {
             "expect" : "HTTP/1.1 500 Server Error\r\nContent-Type: text/html;charset=utf-8\r\nServer: Jetty(9.4.48.v20220622)\r\nTransfer-Encoding: chunked\r\n\r\nThe service has been configured to be broken!",
@@ -109,27 +109,27 @@
   },
   "residue" : [ ],
   "logs" : [ {
-    "time" : "2022-08-10T15:17:31.747+0000",
+    "time" : "2022-08-10T16:38:05.218+0000",
     "level" : "WARN",
     "source" : "com.mastercard.test.flow.example.app.histogram.HistogramTest",
     "message" : " [main]   - Exercising CORE->HISTOGRAM:[] of 'hello [direct, failure, histogram]'"
   }, {
-    "time" : "2022-08-10T15:17:31.747+0000",
+    "time" : "2022-08-10T16:38:05.218+0000",
     "level" : "INFO",
     "source" : "com.mastercard.test.flow.example.app.histogram.HistogramTest",
     "message" : " [main]   - Mocking downstream responses"
   }, {
-    "time" : "2022-08-10T15:17:31.747+0000",
+    "time" : "2022-08-10T16:38:05.218+0000",
     "level" : "INFO",
     "source" : "com.mastercard.test.flow.example.app.histogram.HistogramTest",
     "message" : " [main]   - Sending\nPOST /count/all HTTP/1.1\r\nAccept: application/json\r\nConnection: keep-alive\r\nContent-Type: application/json\r\n\r\nHello world!"
   }, {
-    "time" : "2022-08-10T15:17:31.756+0000",
+    "time" : "2022-08-10T16:38:05.221+0000",
     "level" : "INFO",
     "source" : "com.mastercard.test.flow.example.app.histogram.HistogramTest",
-    "message" : " [main]   - Received\nHTTP/1.1 500 Server Error\r\nContent-Type: text/html;charset=utf-8\r\nDate: Wed, 10 Aug 2022 15:17:31 GMT\r\nServer: Jetty(9.4.48.v20220622)\r\nTransfer-Encoding: chunked\r\n\r\n2d\r\nThe service has been configured to be broken!\r\n0\r\n\r\n"
+    "message" : " [main]   - Received\nHTTP/1.1 500 Server Error\r\nContent-Type: text/html;charset=utf-8\r\nDate: Wed, 10 Aug 2022 16:38:05 GMT\r\nServer: Jetty(9.4.48.v20220622)\r\nTransfer-Encoding: chunked\r\n\r\n2d\r\nThe service has been configured to be broken!\r\n0\r\n\r\n"
   }, {
-    "time" : "2022-08-10T15:17:31.756+0000",
+    "time" : "2022-08-10T16:38:05.221+0000",
     "level" : "WARN",
     "source" : "com.mastercard.test.flow.example.app.histogram.HistogramTest",
     "message" : " [main]   - Complete"
