@@ -1,9 +1,71 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en">
+<head>
   <meta charset="utf-8">
-  <title>Flow execution reports</title>
-
+  <title>Build results</title>
+</head>
 <body>
-  <p>Hi! The report index is <a href="itest">here</a>.
+  <h1>Build artifacts</h1>
+  <p>Until such a time as <a href="https://github.com/actions/upload-artifact/issues/14">upload-artifact#14</a> is addressed, we're reduced to abusing pages to browse build artifacts.
+  See <a href="https://github.com/Mastercard/flow/blob/main/.github/workflows/test.yml">test.yml</a> and <a href="https://github.com/Mastercard/flow/blob/main/.github/workflows/mutation.yml">mutation.yml</a> for the gory details.
   </p>
+  
+  <h2>Execution reports</h2>
+  <table>
+	  <tbody>
+	  <tr>
+		<th>app-itest</th>
+		<td><a href="execution/latest/flow_execution_reports/example/app-itest/target/mctf/latest/index.html">latest</a></td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-itest/target/mctf/older/index.html">older</td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-itest/target/mctf/oldest/index.html">oldest</td>
+	  </tr>
+	  <tr>
+		<th>app-ui</th>
+		<td><a href="execution/latest/flow_execution_reports/example/app-ui/target/mctf/latest/index.html">latest</a></td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-ui/target/mctf/older/index.html">older</td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-ui/target/mctf/oldest/index.html">oldest</td>
+	  </tr>
+	  <tr>
+		<th>app-web-ui</th>
+		<td><a href="execution/latest/flow_execution_reports/example/app-web-ui/target/mctf/latest/index.html">latest</a></td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-web-ui/target/mctf/older/index.html">older</td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-web-ui/target/mctf/oldest/index.html">oldest</td>
+	  </tr>
+	  <tr>
+		<th>app-core</th>
+		<td><a href="execution/latest/flow_execution_reports/example/app-core/target/mctf/latest/index.html">latest</a></td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-core/target/mctf/older/index.html">older</td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-core/target/mctf/oldest/index.html">oldest</td>
+	  </tr>
+	  <tr>
+		<th>app-histogram</th>
+		<td><a href="execution/latest/flow_execution_reports/example/app-histogram/target/mctf/latest/index.html">latest</a></td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-histogram/target/mctf/older/index.html">older</td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-histogram/target/mctf/oldest/index.html">oldest</td>
+	  </tr>
+	  <tr>
+		<th>app-queue</th>
+		<td><a href="execution/latest/flow_execution_reports/example/app-queue/target/mctf/latest/index.html">latest</a></td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-queue/target/mctf/older/index.html">older</td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-queue/target/mctf/oldest/index.html">oldest</td>
+	  </tr>
+	  <tr>
+		<th>app-store</th>
+		<td><a href="execution/latest/flow_execution_reports/example/app-store/target/mctf/latest/index.html">latest</a></td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-store/target/mctf/older/index.html">older</td>
+		<td><a href="execution/latest/flow_execution_reports/example/app-store/target/mctf/oldest/index.html">oldest</td>
+	  </tr>
+	  </tbody>
+  </table>
+  
+  <h2>Mutation testing</h2>
+  <table>
+	  <tbody>
+	  <tr>
+		<td><a href="mutation/latest/mutation_report/index.html">latest</a></td>
+		<td><a href="mutation/older/mutation_report/index.html">older</a></td>
+		<td><a href="mutation/oldest/mutation_report/index.html">oldest</a></td>
+	  </tr>
+	  </tbody>
+  </table>
 </body>
 </html>
