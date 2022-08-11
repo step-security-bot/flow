@@ -176,14 +176,14 @@ sub generate_table {
 <table>
 	<tbody>
 EOT
-	foreach my $time ( sort keys %columns ) {
-		$table .= "\t\t<tr> <th>$time</th> ";
+	foreach my $time ( reverse sort keys %columns ) {
+		$table .= "\t\t<tr> <th>$time</th>\n";
 		foreach my $name ( sort keys %rows ) {
-			$table .= "<td><code>";
+			$table .= "\t\t\t<td><code>";
 			$table .= "<a href=\"$data->{$time}->{$name}\">$name</a>" if defined $data->{$time}->{$name};
-			$table .= "</code></td> ";
+			$table .= "</code></td>\n";
 		}
-		$table .= "</tr>\n";
+		$table .= "\t\t</tr>\n";
 	}
 	$table .= <<EOT;
 	</tbody>
