@@ -177,10 +177,10 @@ sub generate_table {
 	<tbody>
 EOT
 	foreach my $time ( sort keys %columns ) {
-		$table .= "\t\t<tr> <th>$name</th> ";
+		$table .= "\t\t<tr> <th>$time</th> ";
 		foreach my $name ( sort keys %rows ) {
 			$table .= "<td><code>";
-			$table .= "<a href=\"$data->{$time}->{$name}\">$time</a>" if defined $data->{$time}->{$name};
+			$table .= "<a href=\"$data->{$time}->{$name}\">$name</a>" if defined $data->{$time}->{$name};
 			$table .= "</code></td> ";
 		}
 		$table .= "</tr>\n";
