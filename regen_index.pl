@@ -27,7 +27,7 @@ purge_old_reports(
 	now_ts => $now_ts,
 	retention_days => 90,
 	minimum_retention_count => 5,
-	maximum_retention_count => 5,
+	maximum_retention_count => 20,
 	dir => $_ )	foreach ( 'execution', 'mutation' );
 
 my %content = (
