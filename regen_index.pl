@@ -51,7 +51,7 @@ sub ingest_new_report {
 		my $dst = "$dir/$now_ts";
 
 		move( $src, $dst ) or die "move failed: $!";
-		symlink( $dst, "$dir/latest" );
+		symlink( $now_ts, "$dir/latest" );
 
 		# scan the ingested report for index.html files to link
 		my @index_paths = index_scan( $dst );
