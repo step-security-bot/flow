@@ -17,6 +17,7 @@ use POSIX;
 # content, suitable for adding to $GITHUB_STEP_SUMMARY
 # (per https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/)
 
+my $base = "https://mastercard.github.io/flow";
 my $now_ts = time;
 my @markdown_lines = ();
 
@@ -37,7 +38,7 @@ my %content = (
 
 regenerate_index( %content );
 
-push @markdown_lines, "", "[Build artifact index](https://mastercard.github.io/flow/)";
+push @markdown_lines, "", "[Build artifact index]($base)";
 
 say foreach @markdown_lines;
 
@@ -56,7 +57,7 @@ sub ingest_new_report {
 		my @names = strip_shared_path_elements( @index_paths );
 		my @links = ();
 		for( my $i = 0; $i < scalar @index_paths; $i++ ) {
-			push @links, " * [$names[$i]]($index_paths[$i])"
+			push @links, " * [$names[$i]]($base/$index_paths[$i])"
 		}
 		return @links;
 	}
