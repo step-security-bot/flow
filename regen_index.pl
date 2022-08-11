@@ -46,11 +46,12 @@ say foreach @markdown_lines;
 
 sub ingest_new_report {
 	my ( $dir, $now_ts ) = @_;
-	my $src = "$dir/latest";
+	my $src = "$dir/ingest";
 	if( -e $src ) {
 		my $dst = "$dir/$now_ts";
 
 		move( $src, $dst ) or die "move failed: $!";
+                symlink( $dst, "$dir/latest" );
 
 		# scan the ingested report for index.html files to link
 		my @index_paths = index_scan( $dst );
