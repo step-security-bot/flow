@@ -1,0 +1,221 @@
+use 5.014;
+use strict;
+use warnings;
+use File::Copy;
+use File::Path qw( remove_tree );
+use POSIX;
+
+# This script manages our archive of build artifacts and regenerates
+# sections of the index.html file to link to them.
+# New reports are assumed to be dropped into ./execution/latest and ./mutation/latest
+# Anything found there will be moved into timestamp-named directories under ./execution and ./mutation
+# Report retention can be configured in terms of:
+#   * lifetime in days
+#   * minimum number to retain
+#   * maximum number to retain
+# This script will emit markdown on stdout that contains links to newly-ingested
+# content, suitable for adding to $GITHUB_STEP_SUMMARY
+# (per https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/)
+
+my $now_ts = time;
+my @markdown_lines = ();
+
+push @markdown_lines, ingest_new_report( 'execution', $now_ts );
+push @markdown_lines, ingest_new_report( 'mutation', $now_ts );
+
+purge_old_reports(
+	now_ts => $now_ts,
+	retention_days => 90,
+	minimum_retention_count => 5,
+	maximum_retention_count => 5,
+	dir => $_ )	foreach ( 'execution', 'mutation' );
+
+my %content = (
+	execution_report_table => generate_table( 'execution' ),
+	mutation_report_table => generate_table( 'mutation' ),
+	);
+
+regenerate_index( %content );
+
+push @markdown_lines, "", "[Build artifact index](https://mastercard.github.io/flow/)";
+
+say foreach @markdown_lines;
+
+1;
+
+sub ingest_new_report {
+	my ( $dir, $now_ts ) = @_;
+	my $src = "$dir/latest";
+	if( -e $src ) {
+		my $dst = "$dir/$now_ts";
+
+		move( $src, $dst ) or die "move failed: $!";
+
+		# scan the ingested report for index.html files to link
+		my @index_paths = index_scan( $dst );
+		my @names = strip_shared_path_elements( @index_paths );
+		my @links = ();
+		for( my $i = 0; $i < scalar @index_paths; $i++ ) {
+			push @links, " * [$names[$i]]($index_paths[$i])"
+		}
+		return @links;
+	}
+
+	return ();
+}
+
+sub index_scan {
+	my ( $dir ) = @_;
+	my @index_files = ();
+
+	opendir( DIR, $dir ) or die "Failed to open $dir $@";
+	my @ls = grep { $_ ne '.' && $_ ne '..' } readdir( DIR );
+	closedir( DIR );
+
+	my $index_found = 0;
+	foreach my $path ( map { "$dir/$_" } @ls ) {
+		if( -f $path && $path =~ m|/index.html$| ) {
+			push @index_files, $path;
+			$index_found = 1;
+		}
+	}
+
+	# we only want the shallowest index in a tree - it is 
+	# assumed that deeper ones will be linked to from there
+	unless( $index_found ) {
+		foreach my $subdir ( grep { -d } map { "$dir/$_" } @ls ) {
+			push @index_files, index_scan( $subdir );
+		}
+	}
+
+	return @index_files;
+}
+
+sub strip_shared_path_elements {
+	my @strings = @_;
+
+	my @paths = map { [ split '/', $_ ] } @strings;
+
+	if( scalar @paths == 1 ) {
+		return $paths[0]->[0];
+	}
+
+	while( shared_element( 0, @paths ) ) {
+		for( my $i = 0; $i < scalar @paths; $i++ ){
+			my @p = @{$paths[$i]};
+			shift @p;
+			$paths[$i] = [@p];
+		}
+	}  
+	while( shared_element( -1, @paths ) ) {
+		for( my $i = 0; $i < scalar @paths; $i++ ){
+			my @p = @{$paths[$i]};
+			pop @p;
+			$paths[$i] = [@p];
+		}
+	}
+
+	my @stripped = map { join '/', @$_ } @paths;
+}
+
+sub shared_element {
+	my ( $offset, @paths ) = @_;
+	my $element = $paths[0]->[$offset];
+	foreach my $p ( @paths ) {
+		if( $element ne $p->[$offset] ) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
+sub purge_old_reports {
+	my %args = @_;
+
+	opendir( DIR, $args{dir} ) or die "Failed to open $args{dir}";
+	my @reports = sort grep { m/^\d+$/ } readdir( DIR );
+	closedir( DIR );
+
+	my $purge_limit = $args{now_ts} - $args{retention_days} * 24 *60 *60;
+	while( scalar @reports > $args{minimum_retention_count} ) {
+		my $oldest = shift @reports;
+		if( $oldest < $purge_limit || scalar @reports > $args{maximum_retention_count} ) {
+			remove_tree( "$args{dir}/$oldest" );
+		}
+		else {
+			# the oldest report is still newer than the purge limit. We're done here.
+			break;
+		}
+	}
+}
+
+sub generate_table {
+	my ( $dir ) = @_;
+	
+	opendir( DIR, $dir ) or die "Failed to open $dir";
+	my @timestamps = sort grep { m/^\d+$/ } readdir( DIR );
+	closedir( DIR );
+	
+	# map from time to name to path
+	my $data = {};
+	# unique names
+	my %rows = ();
+	my %columns = ();
+	foreach my $ts ( @timestamps ) {
+		my $time = strftime '%Y-%m-%dT%H:%M:%S', gmtime $ts;
+		$columns{$time} = $time;
+		my @index_paths = index_scan( "$dir/$ts" );
+		my @names = strip_shared_path_elements( @index_paths );
+		$rows{$_} = 1 foreach @names;
+		for( my $i = 0; $i < scalar @index_paths; $i++ ) {
+			$data->{$time}->{$names[$i]} = $index_paths[$i];
+		}
+	}
+	
+	my $table = <<EOT;
+<table>
+	<tbody>
+EOT
+	foreach my $time ( sort keys %columns ) {
+		$table .= "\t\t<tr> <th>$name</th> ";
+		foreach my $name ( sort keys %rows ) {
+			$table .= "<td><code>";
+			$table .= "<a href=\"$data->{$time}->{$name}\">$time</a>" if defined $data->{$time}->{$name};
+			$table .= "</code></td> ";
+		}
+		$table .= "</tr>\n";
+	}
+	$table .= <<EOT;
+	</tbody>
+</table>
+EOT
+	return $table;
+}
+
+sub regenerate_index {
+	my %content = @_;
+	
+	open my $rh, 'index.html' or die "Failed to open index.html $!";
+	my @lines = <$rh>;
+	close $rh;
+	
+	my $regenerated = "";
+	for( my $i = 0; $i < scalar @lines; $i++ ) {
+		$regenerated .= $lines[$i];
+		if( $lines[$i] =~ m/<!-- start:(\w+) -->/ && defined $content{$1} ) {
+			# insert our content
+			$regenerated .= $content{$1};
+
+			# advance the index to the end of the block
+			while( $i < scalar @lines && $lines[$i] !~ m/<!-- end:$1 -->/ ) {
+				$i++;
+			}
+			$regenerated .= $lines[$i];
+		}
+	}
+	
+	
+	open my $wh, '>', 'index.html' or die "Failed to open index.html $!";
+	print $wh $regenerated;
+	close $wh;
+}
