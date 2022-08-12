@@ -163,7 +163,7 @@ sub generate_table {
 	my %columns = ();
 	foreach my $ts ( @timestamps ) {
 		my $time = $ts;
-		$ts = strftime '%Y-%m-%dT%H:%M:%S', gmtime $ts if $ts =~ m/^\\d+$/;
+		$time = strftime '%Y-%m-%dT%H:%M:%S', gmtime $ts if $ts =~ m/^\\d+$/;
 		$columns{$time} = $time;
 		my @index_paths = index_scan( "$dir/$ts" );
 		my @names = strip_shared_path_elements( @index_paths );
