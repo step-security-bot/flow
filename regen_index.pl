@@ -163,7 +163,7 @@ sub generate_table {
 	my %report_names = ();
 	foreach my $report ( @reports ) {
 		my $name = $report;
-		$name = strftime '%Y-%m-%dT%H:%M:%S', gmtime $report if $report =~ m/^\\d+$/;
+		$name = strftime '%Y-%m-%dT%H:%M:%S', gmtime $name if $name =~ m/^\d+$/;
 		$report_names{$name} = 1;
 		my @index_paths = index_scan( "$dir/$report" );
 
@@ -200,6 +200,7 @@ EOT
 	</tbody>
 </table>
 EOT
+	say $table
 	return $table;
 }
 
