@@ -49,7 +49,6 @@ sub ingest_new_report {
 		my $dst = "$dir/$now_ts";
 
 		move( $src, $dst ) or die "move failed: $!";
-		system( "cd $dir; ln -sf $now_ts latest; cd .." );
 
 		# scan the ingested report for index.html files to link
 		my @index_paths = index_scan( $dst );
