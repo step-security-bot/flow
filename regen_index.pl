@@ -167,9 +167,6 @@ sub generate_table {
 		$report_names{$name} = 1;
 		my @index_paths = index_scan( "$dir/$report" );
 
-		say "in $name ($dir/$report):";
-		say "  $_" foreach @index_paths;
-
 		my @index_names = strip_shared_path_elements( @index_paths );
 		$all_index_names{$_} = 1 foreach @index_names;
 		for( my $i = 0; $i < scalar @index_paths; $i++ ) {
@@ -177,22 +174,16 @@ sub generate_table {
 		}
 	}
 	
-	use Data::Dumper;
-	say Dumper( { 
-	rows => \%report_names,
-	cols => \%all_index_names,
-	data => $data } );
-	
 	my $table = <<EOT;
 <table>
 	<tbody>
 EOT
 	foreach my $time ( reverse sort keys %report_names ) {
-		$table .= "\t\t<tr> <th>$time</th>\n";
+		$table .= "\t\t<tr> <th><code>$time</code></th>\n";
 		foreach my $name ( sort keys %all_index_names ) {
-			$table .= "\t\t\t<td><code>";
+			$table .= "\t\t\t<td>";
 			$table .= "<a href=\"$data->{$time}->{$name}\">$name</a>" if defined $data->{$time}->{$name};
-			$table .= "</code></td>\n";
+			$table .= "</td>\n";
 		}
 		$table .= "\t\t</tr>\n";
 	}
@@ -200,7 +191,6 @@ EOT
 	</tbody>
 </table>
 EOT
-	say $table;
 	return $table;
 }
 
