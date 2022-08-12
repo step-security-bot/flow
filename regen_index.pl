@@ -19,27 +19,25 @@ use POSIX;
 
 my $base = "https://mastercard.github.io/flow";
 my $now_ts = time;
+my @dirs = qw( execution mutation );
 my @markdown_lines = ();
 
-push @markdown_lines, ingest_new_report( 'execution', $now_ts );
-push @markdown_lines, ingest_new_report( 'mutation', $now_ts );
+push @markdown_lines, ingest_new_report( $_, $now_ts ) foreach @dirs;
 
 purge_old_reports(
 	now_ts => $now_ts,
 	retention_days => 90,
 	minimum_retention_count => 5,
 	maximum_retention_count => 20,
-	dir => $_ )	foreach ( 'execution', 'mutation' );
+	dir => $_ )	foreach @dirs;
 
-my %content = (
-	execution_report_table => generate_table( 'execution' ),
-	mutation_report_table => generate_table( 'mutation' ),
-	);
 
+my %content = map { $_ => generate_table( $_ ) } @dirs;
 regenerate_index( %content );
 
-push @markdown_lines, "", "[Build artifact index]($base)";
+link_latest( $_ ) foreach @dirs;
 
+push @markdown_lines, "", "[Build artifact index]($base)";
 say foreach @markdown_lines;
 
 1;
@@ -51,7 +49,7 @@ sub ingest_new_report {
 		my $dst = "$dir/$now_ts";
 
 		move( $src, $dst ) or die "move failed: $!";
-		symlink( $now_ts, "$dir/latest" );
+		system( "cd $dir; ln -sf $now_ts latest; cd .." );
 
 		# scan the ingested report for index.html files to link
 		my @index_paths = index_scan( $dst );
@@ -220,4 +218,17 @@ sub regenerate_index {
 	open my $wh, '>', 'index.html' or die "Failed to open index.html $!";
 	print $wh $regenerated;
 	close $wh;
+}
+
+sub link_latest {
+	my ( $dir ) = @_;
+
+	opendir( DIR, $dir ) or die "Failed to open $dir";
+	my @timestamps = sort grep { m/^\d+$/ } readdir( DIR );
+	closedir( DIR );
+
+	if( scalar @timestamps ){
+		my $latest = $timestamps[-1];
+		system( "cd $dir; rm -rf latest; ln -sf $latest latest; cd .." );
+	}
 }
