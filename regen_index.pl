@@ -230,7 +230,6 @@ sub link_latest {
 
 	if( scalar @timestamps ){
 		my $latest = $timestamps[-1];
-		# This is totally rubbish, but I cannot for the life of me make symlinking work
-		system( "rm -rf $dir/latest; cp -r $dir/$latest $dir/latest" );
+		system( "cd $dir; rm -rf latest; ln -sf $latest latest; cd .." );
 	}
 }
