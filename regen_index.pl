@@ -31,11 +31,11 @@ purge_old_reports(
 	maximum_retention_count => 20,
 	dir => $_ )	foreach @dirs;
 
+link_latest( $_ ) foreach @dirs;
 
 my %content = map { $_ => generate_table( $_ ) } @dirs;
 regenerate_index( %content );
 
-link_latest( $_ ) foreach @dirs;
 
 push @markdown_lines, "", "[Build artifact index]($base)";
 say foreach @markdown_lines;
