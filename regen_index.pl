@@ -153,7 +153,7 @@ sub generate_table {
 	my ( $dir ) = @_;
 	
 	opendir( DIR, $dir ) or die "Failed to open $dir";
-	my @timestamps = sort grep { m/^\d+$/ } readdir( DIR );
+	my @timestamps = sort grep { $_ ne '.' && $_ ne '..' } readdir( DIR );
 	closedir( DIR );
 	
 	# map from time to name to path
@@ -162,7 +162,8 @@ sub generate_table {
 	my %rows = ();
 	my %columns = ();
 	foreach my $ts ( @timestamps ) {
-		my $time = strftime '%Y-%m-%dT%H:%M:%S', gmtime $ts;
+		my $time = $ts;
+		$ts = strftime '%Y-%m-%dT%H:%M:%S', gmtime $ts if $ts =~ m/^\\d+$/;
 		$columns{$time} = $time;
 		my @index_paths = index_scan( "$dir/$ts" );
 		my @names = strip_shared_path_elements( @index_paths );
