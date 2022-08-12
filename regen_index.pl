@@ -159,31 +159,37 @@ sub generate_table {
 	# map from time to name to path
 	my $data = {};
 	# unique names
-	my %rows = ();
-	my %columns = ();
+	my %all_index_names = ();
+	my %report_names = ();
 	foreach my $report ( @reports ) {
 		my $name = $report;
 		$name = strftime '%Y-%m-%dT%H:%M:%S', gmtime $report if $report =~ m/^\\d+$/;
-		$columns{$name} = 1;
+		$report_names{$name} = 1;
 		my @index_paths = index_scan( "$dir/$report" );
 
 		say "in $name ($dir/$report):";
 		say "  $_" foreach @index_paths;
 
-		my @names = strip_shared_path_elements( @index_paths );
-		$rows{$_} = 1 foreach @names;
+		my @index_names = strip_shared_path_elements( @index_paths );
+		$all_index_names{$_} = 1 foreach @index_names;
 		for( my $i = 0; $i < scalar @index_paths; $i++ ) {
-			$data->{$name}->{$names[$i]} = $index_paths[$i];
+			$data->{$name}->{$index_names[$i]} = $index_paths[$i];
 		}
 	}
+	
+	use Data::Dumper;
+	say Dumper( { 
+	rows => \%report_names,
+	cols => \%all_index_names,
+	data => $data } );
 	
 	my $table = <<EOT;
 <table>
 	<tbody>
 EOT
-	foreach my $time ( reverse sort keys %columns ) {
+	foreach my $time ( reverse sort keys %report_names ) {
 		$table .= "\t\t<tr> <th>$time</th>\n";
-		foreach my $name ( sort keys %rows ) {
+		foreach my $name ( sort keys %all_index_names ) {
 			$table .= "\t\t\t<td><code>";
 			$table .= "<a href=\"$data->{$time}->{$name}\">$name</a>" if defined $data->{$time}->{$name};
 			$table .= "</code></td>\n";
