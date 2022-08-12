@@ -144,7 +144,7 @@ sub purge_old_reports {
 		}
 		else {
 			# the oldest report is still newer than the purge limit. We're done here.
-			break;
+			last;
 		}
 	}
 }
@@ -153,7 +153,7 @@ sub generate_table {
 	my ( $dir ) = @_;
 	
 	opendir( DIR, $dir ) or die "Failed to open $dir";
-	my @timestamps = sort grep { $_ ne '.' && $_ ne '..' } readdir( DIR );
+	my @reports = sort grep { $_ ne '.' && $_ ne '..' } readdir( DIR );
 	closedir( DIR );
 	
 	# map from time to name to path
@@ -161,15 +161,19 @@ sub generate_table {
 	# unique names
 	my %rows = ();
 	my %columns = ();
-	foreach my $ts ( @timestamps ) {
-		my $time = $ts;
-		$time = strftime '%Y-%m-%dT%H:%M:%S', gmtime $ts if $ts =~ m/^\\d+$/;
-		$columns{$time} = $time;
-		my @index_paths = index_scan( "$dir/$ts" );
+	foreach my $report ( @reports ) {
+		my $name = $report;
+		$name = strftime '%Y-%m-%dT%H:%M:%S', gmtime $report if $report =~ m/^\\d+$/;
+		$columns{$name} = 1;
+		my @index_paths = index_scan( "$dir/$report" );
+
+		say "in $name ($dir/$report):";
+		say "  $_" foreach @index_paths;
+
 		my @names = strip_shared_path_elements( @index_paths );
 		$rows{$_} = 1 foreach @names;
 		for( my $i = 0; $i < scalar @index_paths; $i++ ) {
-			$data->{$time}->{$names[$i]} = $index_paths[$i];
+			$data->{$name}->{$names[$i]} = $index_paths[$i];
 		}
 	}
 	
