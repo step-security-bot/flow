@@ -200,7 +200,7 @@ EOT
 	</tbody>
 </table>
 EOT
-	say $table
+	say $table;
 	return $table;
 }
 
