@@ -7,8 +7,9 @@ use POSIX;
 
 # This script manages our archive of build artifacts and regenerates
 # sections of the index.html file to link to them.
-# New reports are assumed to be dropped into ./execution/latest and ./mutation/latest
+# New reports are assumed to be dropped into ./execution/ingest and ./mutation/ingest
 # Anything found there will be moved into timestamp-named directories under ./execution and ./mutation
+# Stable links to the latest reports will be maintained.
 # Report retention can be configured in terms of:
 #   * lifetime in days
 #   * minimum number to retain
@@ -35,7 +36,6 @@ link_latest( $_ ) foreach @dirs;
 
 my %content = map { $_ => generate_table( $_ ) } @dirs;
 regenerate_index( %content );
-
 
 push @markdown_lines, "", "[Build artifact index]($base)";
 say foreach @markdown_lines;
