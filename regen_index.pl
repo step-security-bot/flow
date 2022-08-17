@@ -6,7 +6,7 @@ use File::Path qw( remove_tree );
 use POSIX;
 
 # This script manages our archive of build artifacts and regenerates
-# sections of the index.html file to link to them.
+# sections of the index.md file to link to them.
 # New reports are assumed to be dropped into ./execution/ingest and ./mutation/ingest
 # Anything found there will be moved into timestamp-named directories under ./execution and ./mutation
 # Stable links to the latest reports will be maintained.
@@ -50,7 +50,7 @@ sub ingest_new_report {
 
 		move( $src, $dst ) or die "move failed: $!";
 
-		# scan the ingested report for index.html files to link
+		# scan the ingested report for index files to link
 		my @index_paths = index_scan( $dst );
 		my @names = strip_shared_path_elements( @index_paths );
 		my @links = ();
@@ -196,7 +196,8 @@ EOT
 sub regenerate_index {
 	my %content = @_;
 	
-	open my $rh, 'index.html' or die "Failed to open index.html $!";
+	my $file = 'index.md';
+	open my $rh, $file or die "Failed to open $file $!";
 	my @lines = <$rh>;
 	close $rh;
 	
@@ -216,7 +217,7 @@ sub regenerate_index {
 	}
 	
 	
-	open my $wh, '>', 'index.html' or die "Failed to open index.html $!";
+	open my $wh, '>', $file or die "Failed to open $file $!";
 	print $wh $regenerated;
 	close $wh;
 }
