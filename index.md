@@ -3,7 +3,6 @@
 One of the main features of the [flow testing framework](https://github.com/Mastercard/flow) is the production of rich execution reports.
 Until such a time as [upload-artifact#14](https://github.com/actions/upload-artifact/issues/14) is addressed, we're reduced to abusing github pages to show these artifacts to best effect.
 See [test.yml](https://github.com/Mastercard/flow/blob/main/.github/workflows/test.yml), [mutation.yml](https://github.com/Mastercard/flow/blob/main/.github/workflows/mutation.yml) and [regen_index.pl](regen_index.pl) for the gory details.
-</p>
 
 ## Execution reports
 
