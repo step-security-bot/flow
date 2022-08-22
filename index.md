@@ -202,15 +202,6 @@ These reports are the result of comparing a unified model of system behaviour ag
 			<td><a href="execution/1660289830/flow_execution_reports/example/app-ui/target/mctf/latest/index.html">app-ui</a></td>
 			<td><a href="execution/1660289830/flow_execution_reports/example/app-web-ui/target/mctf/latest/index.html">app-web-ui</a></td>
 		</tr>
-		<tr> <th><code>2022-08-11T21:39:33</code></th>
-			<td><a href="execution/1660253973/flow_execution_reports/example/app-core/target/mctf/latest/index.html">app-core</a></td>
-			<td><a href="execution/1660253973/flow_execution_reports/example/app-histogram/target/mctf/latest/index.html">app-histogram</a></td>
-			<td><a href="execution/1660253973/flow_execution_reports/example/app-itest/target/mctf/latest/index.html">app-itest</a></td>
-			<td><a href="execution/1660253973/flow_execution_reports/example/app-queue/target/mctf/latest/index.html">app-queue</a></td>
-			<td><a href="execution/1660253973/flow_execution_reports/example/app-store/target/mctf/latest/index.html">app-store</a></td>
-			<td><a href="execution/1660253973/flow_execution_reports/example/app-ui/target/mctf/latest/index.html">app-ui</a></td>
-			<td><a href="execution/1660253973/flow_execution_reports/example/app-web-ui/target/mctf/latest/index.html">app-web-ui</a></td>
-		</tr>
 	</tbody>
 </table>
 <!-- end:execution -->
@@ -284,9 +275,6 @@ Test quality metrics for framework packages.
 		</tr>
 		<tr> <th><code>2022-08-12T07:42:43</code></th>
 			<td><a href="mutation/1660290163/mutation_report/index.html">mutation</a></td>
-		</tr>
-		<tr> <th><code>2022-08-11T21:45:42</code></th>
-			<td><a href="mutation/1660254342/mutation_report/index.html">mutation</a></td>
 		</tr>
 	</tbody>
 </table>
