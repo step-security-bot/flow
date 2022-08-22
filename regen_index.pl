@@ -138,7 +138,7 @@ sub purge_old_reports {
 	my $purge_limit = $args{now_ts} - $args{retention_days} * 24 *60 *60;
 	while( scalar @reports > $args{minimum_retention_count} ) {
 		my $oldest = shift @reports;
-		if( $oldest < $purge_limit || scalar @reports > $args{maximum_retention_count} ) {
+		if( $oldest < $purge_limit || scalar @reports > ( $args{maximum_retention_count} -1 ) ) {
 			remove_tree( "$args{dir}/$oldest" );
 		}
 		else {
